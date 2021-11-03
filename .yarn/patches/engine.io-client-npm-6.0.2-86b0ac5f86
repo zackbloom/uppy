@@ -1,0 +1,42 @@
+diff --git a/build/cjs/transports/websocket.js b/build/cjs/transports/websocket.js
+index 8b7db605ba84c829faaef7c1ab3ddc6e46b641a1..7d592f7a76159295e8717276b3627818d7778c3e 100644
+--- a/build/cjs/transports/websocket.js
++++ b/build/cjs/transports/websocket.js
+@@ -12,6 +12,7 @@ const websocket_constructor_js_1 = require("./websocket-constructor.js");
+ const debug_1 = __importDefault(require("debug")); // debug()
+ const engine_io_parser_1 = require("engine.io-parser");
+ const debug = (0, debug_1.default)("engine.io-client:websocket"); // debug()
++const encoder = new TextEncoder;
+ // detect ReactNative environment
+ const isReactNative = typeof navigator !== "undefined" &&
+     typeof navigator.product === "string" &&
+@@ -105,7 +106,7 @@ class WS extends transport_js_1.Transport {
+                         opts.compress = packet.options.compress;
+                     }
+                     if (this.opts.perMessageDeflate) {
+-                        const len = "string" === typeof data ? Buffer.byteLength(data) : data.length;
++                        const len = "string" === typeof data ? encoder.encode(data).byteLength : data.length;
+                         if (len < this.opts.perMessageDeflate.threshold) {
+                             opts.compress = false;
+                         }
+diff --git a/build/esm-debug/transports/websocket.js b/build/esm-debug/transports/websocket.js
+index 2a36e3961a01337bef0b6dd1260d9fb86e41335b..6fe2792e2887d9a7967cdd555924b2dd4a0b5e62 100644
+--- a/build/esm-debug/transports/websocket.js
++++ b/build/esm-debug/transports/websocket.js
+@@ -6,6 +6,7 @@ import { defaultBinaryType, nextTick, usingBrowserWebSocket, WebSocket } from ".
+ import debugModule from "debug"; // debug()
+ import { encodePacket } from "engine.io-parser";
+ const debug = debugModule("engine.io-client:websocket"); // debug()
++const encoder = new TextEncoder;
+ // detect ReactNative environment
+ const isReactNative = typeof navigator !== "undefined" &&
+     typeof navigator.product === "string" &&
+@@ -99,7 +100,7 @@ export class WS extends Transport {
+                         opts.compress = packet.options.compress;
+                     }
+                     if (this.opts.perMessageDeflate) {
+-                        const len = "string" === typeof data ? Buffer.byteLength(data) : data.length;
++                        const len = "string" === typeof data ? encoder.encode(data).byteLength : data.length;
+                         if (len < this.opts.perMessageDeflate.threshold) {
+                             opts.compress = false;
+                         }
