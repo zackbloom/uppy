@@ -8477,7 +8477,7 @@ __metadata:
   resolution: "@uppy/thumbnail-generator@workspace:packages/@uppy/thumbnail-generator"
   dependencies:
     "@uppy/utils": "workspace:^"
-    exifr: ^6.0.0
+    exifr: ^7.1.3
     namespace-emitter: 2.0.1
   peerDependencies:
     "@uppy/core": "workspace:^"
@@ -18870,10 +18870,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"exifr@npm:^6.0.0":
-  version: 6.3.0
-  resolution: "exifr@npm:6.3.0"
-  checksum: 0fae51ab73ae52f3c59401be86a1983833c0ec4c6d5c5ce79f21b6242da26ed091124be1b866c8954377040ff77621fbc34283061c81632ae75880472173a0e4
+"exifr@npm:^7.1.3":
+  version: 7.1.3
+  resolution: "exifr@npm:7.1.3"
+  checksum: c75a21e700378a29d226dd2c102d43679a68539ff1774b05ca19acce366ad47d056985e4f497afe7da6d0d8966d7dc73efb51acc11ff84fa57c9467e630c67ff
   languageName: node
   linkType: hard
 
