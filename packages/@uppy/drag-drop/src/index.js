@@ -7,17 +7,38 @@ const { h } = require('preact')
 const locale = require('./locale.js')
 
 /**
- * Drag & Drop plugin
+ * @typedef {import('@uppy/core').PluginOptions} PluginOptions
+ * @typedef {import('@uppy/core').PluginTarget} PluginTarget
+ * @typedef {import('@uppy/core').Uppy} Uppy
+ * @typedef {import('../types/generatedLocale')} Locale
  *
+ * @typedef {Object} DragDropOptions
+ * @prop {PluginTarget} target
+ * @prop {String} [inputName]
+ * @prop {Boolean} [allowMultipleFiles]
+ * @prop {String|Number} [width]
+ * @prop {String|Number} [height]
+ * @prop {String} [note]
+ * @prop {Locale} [locale]
+ * @prop {(event: DragEvent) => void} [onDragOver]
+ * @prop {(event: DragEvent) => void} [onDragLeave]
+ * @prop {(event: DragEvent) => void} [onDrop]
+ *
+ * @typedef {PluginOptions & DragDropOptions} Options
  */
+
 module.exports = class DragDrop extends UIPlugin {
   // eslint-disable-next-line global-require
   static VERSION = require('../package.json').version
 
-  constructor (uppy, opts) {
+  /**
+   * @param {Uppy} uppy
+   * @param {Options} opts
+   */
+  constructor(uppy, opts) {
     super(uppy, opts)
     this.type = 'acquirer'
-    this.id = this.opts.id || 'DragDrop'
+    this.id = opts.id || 'DragDrop'
     this.title = 'Drag & Drop'
 
     this.defaultLocale = locale
@@ -49,7 +70,7 @@ module.exports = class DragDrop extends UIPlugin {
     this.render = this.render.bind(this)
   }
 
-  addFiles (files) {
+  addFiles(files) {
     const descriptors = files.map((file) => ({
       source: this.id,
       name: file.name,
@@ -69,7 +90,7 @@ module.exports = class DragDrop extends UIPlugin {
     }
   }
 
-  onInputChange (event) {
+  onInputChange(event) {
     const files = toArray(event.target.files)
     if (files.length > 0) {
       this.uppy.log('[DragDrop] Files selected through input')
@@ -86,13 +107,13 @@ module.exports = class DragDrop extends UIPlugin {
     event.target.value = null
   }
 
-  handleDragOver (event) {
+  handleDragOver(event) {
     event.preventDefault()
     event.stopPropagation()
 
     // Check if the "type" of the datatransfer object includes files. If not, deny drop.
     const { types } = event.dataTransfer
-    const hasFiles = types.some(type => type === 'Files')
+    const hasFiles = types.some((type) => type === 'Files')
     const { allowNewUpload } = this.uppy.getState()
     if (!hasFiles || !allowNewUpload) {
       event.dataTransfer.dropEffect = 'none'
@@ -113,7 +134,7 @@ module.exports = class DragDrop extends UIPlugin {
     this.opts?.onDragOver(event)
   }
 
-  handleDragLeave (event) {
+  handleDragLeave(event) {
     event.preventDefault()
     event.stopPropagation()
 
@@ -149,14 +170,16 @@ module.exports = class DragDrop extends UIPlugin {
     this.opts.onDrop?.(event)
   }
 
-  renderHiddenFileInput () {
+  renderHiddenFileInput() {
     const { restrictions } = this.uppy.opts
     return (
       <input
         className="uppy-DragDrop-input"
         type="file"
         hidden
-        ref={(ref) => { this.fileInputRef = ref }}
+        ref={(ref) => {
+          this.fileInputRef = ref
+        }}
         name={this.opts.inputName}
         multiple={restrictions.maxNumberOfFiles !== 1}
         accept={restrictions.allowedFileTypes}
@@ -165,15 +188,22 @@ module.exports = class DragDrop extends UIPlugin {
     )
   }
 
-  static renderArrowSvg () {
+  static renderArrowSvg() {
     return (
-      <svg aria-hidden="true" focusable="false" className="uppy-c-icon uppy-DragDrop-arrow" width="16" height="16" viewBox="0 0 16 16">
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        className="uppy-c-icon uppy-DragDrop-arrow"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+      >
         <path d="M11 10V0H5v10H2l6 6 6-6h-3zm0 0" fillRule="evenodd" />
       </svg>
     )
   }
 
-  renderLabel () {
+  renderLabel() {
     return (
       <div className="uppy-DragDrop-label">
         {this.i18nArray('dropHereOr', {
@@ -183,13 +213,11 @@ module.exports = class DragDrop extends UIPlugin {
     )
   }
 
-  renderNote () {
-    return (
-      <span className="uppy-DragDrop-note">{this.opts.note}</span>
-    )
+  renderNote() {
+    return <span className="uppy-DragDrop-note">{this.opts.note}</span>
   }
 
-  render () {
+  render() {
     const dragDropClass = `uppy-Root
       uppy-u-reset
       uppy-DragDrop-container
@@ -222,7 +250,7 @@ module.exports = class DragDrop extends UIPlugin {
     )
   }
 
-  install () {
+  install() {
     const { target } = this.opts
 
     this.setPluginState({
@@ -234,7 +262,7 @@ module.exports = class DragDrop extends UIPlugin {
     }
   }
 
-  uninstall () {
+  uninstall() {
     this.unmount()
   }
 }
